@@ -1,7 +1,9 @@
 """Console expense manager application."""
 
+import io
 import json
 import logging
+import sys
 from pathlib import Path
 
 from expense import Expense
@@ -83,6 +85,8 @@ def show_total(expenses: list[Expense]) -> None:
 
 def main() -> None:
     """Run the expense manager menu loop."""
+    if isinstance(sys.stdout, io.TextIOWrapper):
+        sys.stdout.reconfigure(encoding="utf-8")
     logger.info("Application started")
     expenses: list[Expense] = load_expenses()
     while True:
