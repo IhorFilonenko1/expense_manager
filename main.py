@@ -51,6 +51,16 @@ def show_all_expenses(expenses: list[Expense]) -> None:
     print_expenses(expenses)
 
 
+def show_expenses_by_category(expenses: list[Expense]) -> None:
+    """Show only expenses matching the category entered by the user."""
+    category: str = input("Введіть категорію: ").strip()
+    filtered: list[Expense] = [
+        expense for expense in expenses
+        if expense.category.lower() == category.lower()
+    ]
+    print_expenses(filtered)
+
+
 def main() -> None:
     """Run the expense manager menu loop."""
     expenses: list[Expense] = load_expenses()
@@ -65,6 +75,8 @@ def main() -> None:
             add_expense(expenses)
         elif choice == "2":
             show_all_expenses(expenses)
+        elif choice == "3":
+            show_expenses_by_category(expenses)
         elif choice == "5":
             print("До побачення!")
             break
