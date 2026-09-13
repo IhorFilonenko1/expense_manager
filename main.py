@@ -1,11 +1,20 @@
 """Console expense manager application."""
 
 import json
+import logging
 from pathlib import Path
 
 from expense import Expense
 
 DATA_FILE: Path = Path("expenses.json")
+
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    encoding="utf-8",
+)
+logger: logging.Logger = logging.getLogger(__name__)
 
 
 def load_expenses() -> list[Expense]:
@@ -29,11 +38,13 @@ def add_expense(expenses: list[Expense]) -> None:
     try:
         amount: float = float(input("Сума: ").strip())
     except ValueError:
+        logger.warning("Invalid amount entered for expense '%s'", title)
         print("Помилка: сума має бути числом.")
         return
     category: str = input("Категорія: ").strip()
     expenses.append(Expense(title=title, amount=amount, category=category))
     save_expenses(expenses)
+    logger.info("Expense added: %s %.2f %s", title, amount, category)
     print("Витрату додано.")
 
 
@@ -48,6 +59,7 @@ def print_expenses(expenses: list[Expense]) -> None:
 
 def show_all_expenses(expenses: list[Expense]) -> None:
     """Show all recorded expenses."""
+    logger.info("Viewed all expenses (%d records)", len(expenses))
     print_expenses(expenses)
 
 
@@ -58,17 +70,20 @@ def show_expenses_by_category(expenses: list[Expense]) -> None:
         expense for expense in expenses
         if expense.category.lower() == category.lower()
     ]
+    logger.info("Viewed expenses by category '%s' (%d records)", category, len(filtered))
     print_expenses(filtered)
 
 
 def show_total(expenses: list[Expense]) -> None:
     """Calculate and print the total sum of all expenses."""
     total: float = sum(expense.amount for expense in expenses)
+    logger.info("Viewed total expenses: %.2f", total)
     print(f"Загальна сума витрат: {total:g} грн")
 
 
 def main() -> None:
     """Run the expense manager menu loop."""
+    logger.info("Application started")
     expenses: list[Expense] = load_expenses()
     while True:
         print("\n1. Додати витрату")
@@ -86,9 +101,11 @@ def main() -> None:
         elif choice == "4":
             show_total(expenses)
         elif choice == "5":
+            logger.info("Application finished")
             print("До побачення!")
             break
         else:
+            logger.warning("Unknown menu choice: '%s'", choice)
             print("Помилка: невідомий пункт меню.")
 
 
