@@ -37,6 +37,20 @@ def add_expense(expenses: list[Expense]) -> None:
     print("Витрату додано.")
 
 
+def print_expenses(expenses: list[Expense]) -> None:
+    """Print a numbered list of expenses."""
+    if not expenses:
+        print("Витрат немає.")
+        return
+    for index, expense in enumerate(expenses, start=1):
+        print(f"{index}. {expense.title} {expense.amount:g} грн {expense.category}")
+
+
+def show_all_expenses(expenses: list[Expense]) -> None:
+    """Show all recorded expenses."""
+    print_expenses(expenses)
+
+
 def main() -> None:
     """Run the expense manager menu loop."""
     expenses: list[Expense] = load_expenses()
@@ -49,6 +63,8 @@ def main() -> None:
         choice: str = input("Оберіть дію: ").strip()
         if choice == "1":
             add_expense(expenses)
+        elif choice == "2":
+            show_all_expenses(expenses)
         elif choice == "5":
             print("До побачення!")
             break
