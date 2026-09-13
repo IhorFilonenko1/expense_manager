@@ -61,6 +61,12 @@ def show_expenses_by_category(expenses: list[Expense]) -> None:
     print_expenses(filtered)
 
 
+def show_total(expenses: list[Expense]) -> None:
+    """Calculate and print the total sum of all expenses."""
+    total: float = sum(expense.amount for expense in expenses)
+    print(f"Загальна сума витрат: {total:g} грн")
+
+
 def main() -> None:
     """Run the expense manager menu loop."""
     expenses: list[Expense] = load_expenses()
@@ -77,6 +83,8 @@ def main() -> None:
             show_all_expenses(expenses)
         elif choice == "3":
             show_expenses_by_category(expenses)
+        elif choice == "4":
+            show_total(expenses)
         elif choice == "5":
             print("До побачення!")
             break
